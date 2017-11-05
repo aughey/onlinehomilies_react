@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import Header from './Header'
 import jquery from 'jquery'
-import {Card, CardHeader, CardTitle, CardText, CardMedia} from 'material-ui/Card';
+import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -69,7 +69,9 @@ class App extends Component {
     state = Object.assign(state, newstate)
     this.setState(newstate);
 
-    return jquery.getJSON('/sessions', {
+   var url="/sessions";
+   //var url="http://washucsc.org:3001/sessions";
+    return jquery.getJSON(url, {
       page: state.page,
       q: state.q
     }).then((d) => {
