@@ -21,7 +21,15 @@
   font-size: large;
 }
 
+.session {
+  background-color: #eeeeee;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.session {
+  margin-bottom: 1em;
 }
