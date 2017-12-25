@@ -1,5 +1,74 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+.main {
+  zbackground-image: url("/csc.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 300px;
+
+}
+
+.session {
+  background-size: 100% 100%;
+}
+
+
+.background0 {
+  background-image: url("/backgrounds/0.jpg");
+  font-family: 'Josefin Slab', serif;
+  text-shadow: 4px 4px 4px #888;
+}
+
+.background1 {
+  background-image: url("/backgrounds/1.jpg");
+  font-family: 'Risque', serif;
+  text-shadow: 4px 4px 4px #888;
+}
+.background2 {
+  background-image: url("/backgrounds/2.jpg");
+  font-family: 'Arvo', serif;
+  text-shadow: 4px 4px 4px #888;
+}
+.background3 {
+  background-image: url("/backgrounds/3.jpg");
+  font-family: 'ABeeZee', serif;
+  text-shadow: 4px 4px 4px #888;
+}
+.background4 {
+  background-image: url("/backgrounds/4.jpg");
+  font-family: 'Abril Fatface', serif;
+  text-shadow: 4px 4px 4px #888;
+}
+.background5 {
+  background-image: url("/backgrounds/5.jpg");
+  font-family: 'Vollkorn', serif;
+  text-shadow: 4px 4px 4px #888;
+}
+.background6 {
+  background-image: url("/backgrounds/6.jpg");
+  font-family: 'Arvo', serif;
+  text-shadow: 4px 4px 4px #888;
+}
+.background7 {
+  background-image: url("/backgrounds/7.jpg");
+  font-family: 'Lato', serif;
+  text-shadow: 4px 4px 4px #888;
+}
+
+.card {
+  border: 3px solid white;
+  color: white;
+  margin: 5px;
+}
+
+.myheader {
+
+  color: #000;
+}
+
+.card a {
+  color: white;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+  font-family: 'Arial';
 }
