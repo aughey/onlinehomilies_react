@@ -100,7 +100,7 @@ class Session extends React.PureComponent {
 
         <div className="card-body">
           <Recordings showVideo={this.props.showVideo} session={s} recordings={s.recordings}/>
-          <div class='bottom'>
+          <div className='bottom'>
             <small>
               {s.title}
               - {s.description}
@@ -116,7 +116,7 @@ class Sessions extends React.PureComponent {
   render() {
 
     var s = this.props.sessions.map((s, i) => (
-      <div className="col-lg-4 col-sm-8"><Session key={s._id} session={s} background={i % 8}/></div>
+      <div key={s._id} className="col-lg-4 col-sm-8"><Session session={s} background={i % 8}/></div>
     ))
 
     return (
@@ -168,6 +168,12 @@ class LoadPageData extends React.Component {
     var url = "/sessions";
     this.setState({loading: true, data: null})
 
+    var timeout = setTimeout(() => {
+      this.setState({
+        too_long: true
+      })
+    },1000);
+
     var args = {}
     this.attrs.forEach((a) => {
       if (props[a]) {
@@ -184,11 +190,20 @@ class LoadPageData extends React.Component {
     }).fail(() => {
       this.setState({error: "Error: couldn't retrieve recordings.  Please contact John Aughey jha@aughey.com"})
     }).always(() => {
-      this.setState({loading: false})
+      this.setState({loading: false, too_long:false});
+      clearTimeout(timeout);
     });
   }
   render() {
-    if (this.state.data) {
+    if(this.state.too_long) {
+      return (
+        <div><img alt="loading" src="/ajax-loader.gif"/></div>
+      )
+    } if(this.state.error) {
+      return (
+        <div>{this.state.error}</div>
+      )
+    } else if (this.state.data) {
       var children = this.props.children
       var childrenWithProps = React.Children.map(children, child => React.cloneElement(child, {data: this.state.data}))
       return (
@@ -196,7 +211,7 @@ class LoadPageData extends React.Component {
       )
     } else {
       return (
-        <div><img alt="loading" src="/ajax-loader.gif"/></div>
+        <div></div>
       )
       /*
       return (
