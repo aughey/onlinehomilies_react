@@ -165,7 +165,7 @@ class LoadPageData extends React.Component {
     }
   }
   get(props) {
-    var url = "/sessions";
+    var url = "/api/sessions";
     this.setState({loading: true, data: null})
 
     var timeout = setTimeout(() => {

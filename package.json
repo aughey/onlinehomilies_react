@@ -2,7 +2,7 @@
   "name": "onlinehomilies.react",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://washucsc.org:3001/",
+  "proxy": "http://aughey.washucsc.org/",
   "dependencies": {
     "bootstrap": "^3.3.7",
     "jquery": "^3.2.1",
