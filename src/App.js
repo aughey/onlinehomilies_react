@@ -272,6 +272,7 @@ class App extends Component {
 
         <Switch>
           <Route path="/r/:sessionID/:recordingID" component={RecRoute}/>
+          <Route path="/r/:sessionID/:recordingID.html" component={RecRoute}/>
           <Route path="/search/:search" component={Search}/>
           <Route path="/page/:page" component={RoutePage}/>
           <Route path="*" component={PageRedirect}/>
