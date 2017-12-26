@@ -58,6 +58,10 @@
   margin: 5px;
 }
 
+h1 a {
+  color: #888;
+}
+
 .myheader {
 
   color: #000;
