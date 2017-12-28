@@ -184,7 +184,7 @@ class LoadPageData extends React.Component {
 
     jquery.getJSON(url, args).then((d) => {
       this.setState({data: d})
-      console.log(d);
+      //console.log(d);
       //this.setState(d)
       //return d;
     }).fail(() => {
@@ -317,7 +317,7 @@ class PaginatedSessions extends React.PureComponent {
 
 class RoutePage extends Component {
   render() {
-    console.log(this.props);
+    //console.log(this.props);
     var page = this.props.match.params.page;
     return (
       <div>
