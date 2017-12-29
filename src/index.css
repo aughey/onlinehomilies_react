@@ -76,3 +76,8 @@ h1 a {
   bottom: 0;
   font-family: 'Arial';
 }
+
+.navbar {
+  background-color: #eb002b!important;
+  color: white;
+}
