@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 //import './App.css';
 import './paginate.css';
-import Header from './Header'
+import 'video.js/dist/video-js.css'
 import jquery from 'jquery'
+import videojs from 'video.js'
 //import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 //import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
@@ -24,8 +25,7 @@ class PlayRecording extends React.PureComponent {
   }
   render() {
     var video = null;
-    if (this.state.showVideo) {
-      video = <iframe title={this.props.recording.youtube_url} width="560" height="315" src={this.props.recording.youtube_url} frameBorder="0" allowFullScreen></iframe>
+    if (this.state.showVideo) { video = <iframe title={this.props.recording.youtube_url} width="560" height="315" src={this.props.recording.youtube_url} frameBorder="0" allowFullScreen></iframe>
     } else {
       video = (<RaisedButton onClick={this.play} label="Play Recording"/>)
       video = (
@@ -37,11 +37,83 @@ class PlayRecording extends React.PureComponent {
 }
 */
 
-class Recording extends React.PureComponent {
+class VideoPlayerYoutube extends React.PureComponent {
   render() {
     var r = this.props.recording;
 
-    var video = null;
+    return (
+      <iframe title={r.youtube_url} width="560" height="315" src={r.youtube_url} frameBorder="0" allowFullScreen></iframe>
+    )
+  }
+}
+
+class VideoPlayerSelfHosted extends React.PureComponent {
+  render() {
+    var r = this.props.recording;
+    var video_url = 'http://s3.amazonaws.com/onlinehomilies_videos/' + r.youtube_id + ".mp4";
+
+    return (
+        <video preload='none' poster="http://washucsc.org/test.jpg" controls>
+	  <source src={video_url}/>
+	</video>
+	)
+  }
+}
+
+class VideoPlayerSelfHostedVideoJS extends React.Component {
+  componentDidMount() {
+    var r = this.props.recording
+    var video_url = r.video_url
+    var sources = [
+      {
+        src: video_url,
+	type: 'video/mp4'
+      }
+    ]
+    var options = {
+      controls: true,
+      sources: sources,
+      poster: r.poster_url,
+      fluid: true
+    }
+    this.player = videojs(this.videoNode, options,  function onPlayerReady() {
+          console.log('onPlayerReady', this)
+    });
+  }
+  // destroy player on unmount
+  componentWillUnmount() {
+    if (this.player) {
+      this.player.dispose()
+    }
+  }
+  render() {
+
+    return (
+      <div data-vjs-player>
+        <video ref={ node => this.videoNode = node } className='video-js' />
+      </div>
+	)
+  }
+}
+
+
+class AudioPlayer extends React.PureComponent {
+  render() {
+    var r = this.props.recording
+	  return(
+	  <div>
+	  <a href={r.audio_url}>Audio Link</a>
+          <audio preload='none' controls>
+	    <source src={r.audio_url}/>
+  	  </audio>
+	  </div>
+	  )
+  }
+}
+
+class Recording extends React.PureComponent {
+  render() {
+    var r = this.props.recording;
 
     var inner_content = (
       <div>
@@ -51,12 +123,35 @@ class Recording extends React.PureComponent {
     )
 
     if (this.props.showVideo) {
-      video = <iframe title={this.props.recording.youtube_url} width="560" height="315" src={this.props.recording.youtube_url} frameBorder="0" allowFullScreen></iframe>
+      var media = null
+      if(r.youtube_url || r.video_url) {
+        if(r.youtube_url) {
+          media = ( 
+	  <div>
+	  <VideoPlayerYoutube recording={r}/> 
+	  </div>
+	  )
+	} else {
+          media = ( <VideoPlayerSelfHostedVideoJS recording={r}/> )
+	}
+      } else if(r.audio_url) {
+        media = (
+	  <AudioPlayer recording={r}/>
+	)
+      } else {
+        media = (
+	  <div>Something is wrong and the media is not available.  Please contact John Aughey at jha@aughey.com.</div>
+	  )
+      }
 
       return (
         <div className="recording text-center">
             {inner_content}
-            {video}
+            {media}
+	    <div>
+	    <a href={r.audio_url}>Audio only MP3 Download</a>
+	    </div>
+	    <br/>
         </div>
       )
     } else {
@@ -224,12 +319,6 @@ class LoadPageData extends React.Component {
       )
       */
     }
-  }
-}
-
-class Rec extends React.PureComponent {
-  render() {
-    return (<Session session={this.props.data.sessions[0]}/>)
   }
 }
 
