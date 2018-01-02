@@ -53,10 +53,10 @@ class VideoPlayerSelfHosted extends React.PureComponent {
     var video_url = 'http://s3.amazonaws.com/onlinehomilies_videos/' + r.youtube_id + ".mp4";
 
     return (
-        <video preload='none' poster="http://washucsc.org/test.jpg" controls>
-	  <source src={video_url}/>
-	</video>
-	)
+      <video preload='none' poster="http://washucsc.org/test.jpg" controls>
+        <source src={video_url}/>
+      </video>
+    )
   }
 }
 
@@ -67,7 +67,7 @@ class VideoPlayerSelfHostedVideoJS extends React.Component {
     var sources = [
       {
         src: video_url,
-	type: 'video/mp4'
+        type: 'video/mp4'
       }
     ]
     var options = {
@@ -76,8 +76,8 @@ class VideoPlayerSelfHostedVideoJS extends React.Component {
       poster: r.poster_url,
       fluid: true
     }
-    this.player = videojs(this.videoNode, options,  function onPlayerReady() {
-          console.log('onPlayerReady', this)
+    this.player = videojs(this.videoNode, options, function onPlayerReady() {
+      console.log('onPlayerReady', this)
     });
   }
   // destroy player on unmount
@@ -90,28 +90,36 @@ class VideoPlayerSelfHostedVideoJS extends React.Component {
 
     return (
       <div data-vjs-player>
-        <video ref={ node => this.videoNode = node } className='video-js' />
+        <video ref={node => this.videoNode = node} className='video-js'/>
       </div>
-	)
+    )
   }
 }
-
 
 class AudioPlayer extends React.PureComponent {
   render() {
     var r = this.props.recording
-	  return(
-	  <div>
-	  <a href={r.audio_url}>Audio Link</a>
-          <audio preload='none' controls>
-	    <source src={r.audio_url}/>
-  	  </audio>
-	  </div>
-	  )
+    return (
+      <div>
+        <a href={r.audio_url}>Audio Link</a>
+        <audio preload='none' controls>
+          <source src={r.audio_url}/>
+        </audio>
+      </div>
+    )
   }
 }
 
 class Recording extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  toggleTranscription = () => {
+    this.setState({
+      show_transcription: !this.state.show_transcription
+    })
+  }
   render() {
     var r = this.props.recording;
 
@@ -124,41 +132,54 @@ class Recording extends React.PureComponent {
 
     if (this.props.showVideo) {
       var media = null
-      if(r.youtube_url || r.video_url) {
-        if(r.youtube_url) {
-          media = ( 
-	  <div>
-	  <VideoPlayerYoutube recording={r}/> 
-	  </div>
-	  )
-	} else {
-          media = ( <VideoPlayerSelfHostedVideoJS recording={r}/> )
-	}
-      } else if(r.audio_url) {
-        media = (
-	  <AudioPlayer recording={r}/>
-	)
+      if (r.youtube_url || r.video_url) {
+        if (r.youtube_url) {
+          media = (
+            <div>
+              <VideoPlayerYoutube recording={r}/>
+            </div>
+          )
+        } else {
+          media = (<VideoPlayerSelfHostedVideoJS recording={r}/>)
+        }
+      } else if (r.audio_url) {
+        media = (<AudioPlayer recording={r}/>)
       } else {
         media = (
-	  <div>Something is wrong and the media is not available.  Please contact John Aughey at jha@aughey.com.</div>
-	  )
+          <div>Something is wrong and the media is not available. Please contact John Aughey at jha@aughey.com.</div>
+        )
       }
 
-      if(r.wordcloud_image) {
+      if (this.state.show_transcription) {
+        var transcription = (
+          <div class="transcription card">
+            <h1>Transcription</h1>
+            <p>Note: This transcription is automated and not exact. This should be used purely as a text reference.</p>
+            <p>{r.transcription}</p>
+          </div>
+        )
+      } else if (r.transcription) {
+        var transcription = (
+          <button onClick={this.toggleTranscription} className='btn'>Show Transcription</button>
+        )
+      }
+
+      if (r.wordcloud_image) {
         var wordcloud = (
-	  <div><img src={r.wordcloud_image} alt="wordcloud"/></div>
-	)
+          <div><img src={r.wordcloud_image} alt="wordcloud"/></div>
+        )
       }
 
       return (
         <div className="recording text-center">
-            {inner_content}
-            {media}
-	    <div>
-	    <a href={r.audio_url}>Audio only MP3 Download</a>
-	    </div>
-	    {wordcloud}
-	    <br/>
+          {inner_content}
+          {media}
+          <div>
+            <a href={r.audio_url}>Audio only MP3 Download</a>
+          </div>
+          {wordcloud}
+          {transcription}
+          <br/>
         </div>
       )
     } else {
@@ -271,10 +292,8 @@ class LoadPageData extends React.Component {
     this.setState({loading: true, data: null})
 
     var timeout = setTimeout(() => {
-      this.setState({
-        too_long: true
-      })
-    },1000);
+      this.setState({too_long: true})
+    }, 1000);
 
     var args = {}
     this.attrs.forEach((a) => {
@@ -292,16 +311,17 @@ class LoadPageData extends React.Component {
     }).fail(() => {
       this.setState({error: "Error: couldn't retrieve recordings.  Please contact John Aughey jha@aughey.com"})
     }).always(() => {
-      this.setState({loading: false, too_long:false});
+      this.setState({loading: false, too_long: false});
       clearTimeout(timeout);
     });
   }
   render() {
-    if(this.state.too_long) {
+    if (this.state.too_long) {
       return (
         <div><img alt="loading" src="/ajax-loader.gif"/></div>
       )
-    } if(this.state.error) {
+    }
+    if (this.state.error) {
       return (
         <div>{this.state.error}</div>
       )
@@ -330,18 +350,21 @@ class LoadPageData extends React.Component {
 }
 
 class SearchInput extends Component {
-  search = (e, q) => {
-    console.log(e);
-    this.q = q;
+  search = (e) => {
+    this.q = e.target.value;
+  }
+  testSubmit = (e) => {
+    if (e.key === 'Enter') {
+      this.doSearch()
+    }
   }
   doSearch = () => {
-    console.log(this.props);
     this.props.history.push("/search/" + this.q);
   }
   render() {
     return (
       <div>
-        <input hintText="Search" onChange={this.search}/>
+        <input placeholder="Search Words" onKeyPress={this.testSubmit} onChange={this.search}/>
         <button onClick={this.doSearch}>Search</button>
       </div>
     )
@@ -351,9 +374,18 @@ class SearchInput extends Component {
 class Search extends React.PureComponent {
   render() {
     var params = this.props.match.params;
+    if(params.page) {
+      var page = params.page
+    } else {
+      var page = 1
+    }
     return (
       <div>
         <div>Search Term: {params.search}</div>
+        <SearchInput history={this.props.history}/>
+        <LoadPageData page={page} q={params.search}>
+          <PaginatedSessions prefix={"/search/" + params.search}  history={this.props.history} page={page}/>
+        </LoadPageData>
       </div>
     )
   }
@@ -365,10 +397,10 @@ class App extends Component {
   render() {
     return (
       <Router>
-
         <Switch>
           <Route path="/r/:sessionID/:recordingID" component={RecRoute}/>
           <Route path="/r/:sessionID/:recordingID.html" component={RecRoute}/>
+          <Route path="/search/:search/page/:page" component={Search}/>
           <Route path="/search/:search" component={Search}/>
           <Route path="/page/:page" component={RoutePage}/>
           <Route path="*" component={PageRedirect}/>
@@ -387,11 +419,22 @@ class PageRedirect extends React.PureComponent {
 
 class PaginatedSessions extends React.PureComponent {
   changePage = (page) => {
-    this.props.history.push("/page/" + (page.selected + 1));
+    var prefix = this.props.prefix
+    if(!prefix) {
+      prefix = ""
+    }
+    this.props.history.push(prefix + "/page/" + (page.selected + 1));
   }
 
   render() {
     var data = this.props.data;
+
+    if (data.count === 0) {
+      return (
+        <div>No results found</div>
+      )
+    }
+
     var pages = Math.ceil(data.count / data.limit);
     var pagination = null;
     //{"Page " + this.props.page + " of " + pages}
@@ -405,7 +448,8 @@ class PaginatedSessions extends React.PureComponent {
 
     return (
       <div>
-        <Sessions sessions={data.sessions}/> <hr/>{pagination}
+        <Sessions sessions={data.sessions}/>
+        <hr/>{pagination}
       </div>
     )
   }
@@ -417,6 +461,7 @@ class RoutePage extends Component {
     var page = this.props.match.params.page;
     return (
       <div>
+        <SearchInput history={this.props.history}/>
         <LoadPageData page={page}>
           <PaginatedSessions history={this.props.history} page={page}/>
         </LoadPageData>

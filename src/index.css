@@ -81,3 +81,12 @@ h1 a {
   background-color: #eb002b!important;
   color: white;
 }
+
+
+.transcription {
+  text-align: left;
+  background-color: white;
+  color: black;
+  font-family: 'Arial', serif;
+  text-shadow: none;
+}
