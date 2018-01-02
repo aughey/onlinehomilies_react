@@ -144,6 +144,12 @@ class Recording extends React.PureComponent {
 	  )
       }
 
+      if(r.wordcloud_image) {
+        var wordcloud = (
+	  <div><img src={r.wordcloud_image} alt="wordcloud"/></div>
+	)
+      }
+
       return (
         <div className="recording text-center">
             {inner_content}
@@ -151,6 +157,7 @@ class Recording extends React.PureComponent {
 	    <div>
 	    <a href={r.audio_url}>Audio only MP3 Download</a>
 	    </div>
+	    {wordcloud}
 	    <br/>
         </div>
       )
