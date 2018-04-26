@@ -154,7 +154,7 @@ class Recording extends React.PureComponent {
         var transcription = (
           <div class="transcription card">
             <h1>Transcription</h1>
-            <p>Note: This transcription is automated and not exact. This should be used purely as a text reference.</p>
+            <p>Note: This transcription was created by a computer and is only approximate. This should be used purely as a textual reference.</p>
             <p>{r.transcription}</p>
           </div>
         )
