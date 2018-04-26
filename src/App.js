@@ -269,11 +269,22 @@ class RecRoute extends React.Component {
   }
 }
 
+class OldSessionRoute extends React.Component {
+  render() {
+    return (
+      <LoadPageData old_session_id={this.props.match.params.sessionID}>
+        <SingleRec/>
+      </LoadPageData>
+    )
+  }
+}
+
+
 class LoadPageData extends React.Component {
   constructor(props) {
     super(props);
     this.state = {}
-    this.attrs = ['id', 'q', 'page']
+    this.attrs = ['old_session_id','id', 'q', 'page']
   }
   componentDidMount() {
     this.get(this.props);
@@ -403,6 +414,7 @@ class App extends Component {
           <Route path="/search/:search/page/:page" component={Search}/>
           <Route path="/search/:search" component={Search}/>
           <Route path="/page/:page" component={RoutePage}/>
+          <Route path="/sessions/:sessionID" component={OldSessionRoute}/>
           <Route path="*" component={PageRedirect}/>
         </Switch>
 
