@@ -217,9 +217,28 @@ class Session extends React.PureComponent {
   */
   render() {
     var s = this.props.session;
+    var readingurl;
+    if (this.props.showVideo) {
+      try {
+        var d = new Date(s.date);
+        window.foobar = s;
+        function twodigit(a) {
+          return a.toString().padStart(2, '0');
+        }
+        readingurl = "http://www.usccb.org/bible/readings/" + twodigit(d.getUTCMonth() + 1) + twodigit(d.getUTCDate()) + d.getUTCFullYear().toString().substr(2) + ".cfm"
+        readingurl = (
+          <a href={readingurl} target="_blank">Click here to see the USCCB readings for this date</a>
+        )
+        //readingurl = s.date + " " + d.toString()
+        //  readingurl = JSON.stringify(s,null,' ')
+      } catch(e) {
+        readingurl = null
+      }
+    }
     //<img className="card-img-top" src={"/backgrounds/" + this.props.background + ".jpg"} alt=""/>
     return (
       <div className={"session card h-100 background" + this.props.background}>
+        {readingurl}
 
         <div className="card-body">
           <Recordings showVideo={this.props.showVideo} session={s} recordings={s.recordings}/>
@@ -279,12 +298,11 @@ class OldSessionRoute extends React.Component {
   }
 }
 
-
 class LoadPageData extends React.Component {
   constructor(props) {
     super(props);
     this.state = {}
-    this.attrs = ['old_session_id','id', 'q', 'page']
+    this.attrs = ['old_session_id', 'id', 'q', 'page']
   }
   componentDidMount() {
     this.get(this.props);
@@ -385,7 +403,7 @@ class SearchInput extends Component {
 class Search extends React.PureComponent {
   render() {
     var params = this.props.match.params;
-    if(params.page) {
+    if (params.page) {
       var page = params.page
     } else {
       var page = 1
@@ -395,7 +413,7 @@ class Search extends React.PureComponent {
         <div>Search Term: {params.search}</div>
         <SearchInput history={this.props.history}/>
         <LoadPageData page={page} q={params.search}>
-          <PaginatedSessions prefix={"/search/" + params.search}  history={this.props.history} page={page}/>
+          <PaginatedSessions prefix={"/search/" + params.search} history={this.props.history} page={page}/>
         </LoadPageData>
       </div>
     )
@@ -432,7 +450,7 @@ class PageRedirect extends React.PureComponent {
 class PaginatedSessions extends React.PureComponent {
   changePage = (page) => {
     var prefix = this.props.prefix
-    if(!prefix) {
+    if (!prefix) {
       prefix = ""
     }
     this.props.history.push(prefix + "/page/" + (page.selected + 1));
